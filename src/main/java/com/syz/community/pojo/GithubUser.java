@@ -1,4 +1,4 @@
-package com.syz.community.dto;
+package com.syz.community.pojo;
 
 public class GithubUser {
     private String name;
