@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @Component
 public class GithubProvider {
-
+    //ログイン処理
     public String getAccessToken(AccessTokenDto accessTokenDto) {
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
         OkHttpClient client = new OkHttpClient();

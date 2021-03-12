@@ -18,7 +18,7 @@
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                     data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">syzフォーラム</span>
+                <span class="sr-only" href="/">syzフォーラム</span>
             </button>
             <a class="navbar-brand" href="#">syzフォーラム</a>
         </div>
@@ -31,6 +31,9 @@
                 </div>
                 <button type="submit" class="btn btn-default">検索</button>
             </form>
+            <li th:if="${session.user!=null}">
+                <a href="/publish">質問する</a>
+            </li>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown" th:if="${session.user!=null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
@@ -50,27 +53,29 @@
 </nav>
 <div class="container-fluid main">
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 " >
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 ">
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 提出</h2>
             <hr>
-            <form action="">
+            <form action="/publish" method="post">
                 <div class="form-group">
                     <label for="title">タイトル(概要)：</label>
-                    <input type="text" class="form-control" id="title" 　name="title" placeholder="質問タイトル">
+                    <input type="text" id="title" name="title" class="form-control"  placeholder="質問タイトル" th:value="${title}">
                 </div>
                 <div class="form-group">
                     <label for="description">質問内容(必須、右側のガイドを参照)：</label>
-                    <textarea  id="description" name="description" class="form-control" cols="30" rows="10"></textarea>
+                    <textarea id="description" name="description" class="form-control" cols="30" rows="10" th:value="${description}"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="tag">タグ：</label>
-                    <input type="text" class="form-control" id="tag" 　name="title" placeholder="タグを入力してください。">
+                    <input type="text" id="tag" name="tag" class="form-control"  placeholder="タグを入力してください。" th:value="${tag}">
                 </div>
-
+                <div th:if="${error}!=null">
+                    <span class="alert alert-danger" role="alert" th:text="${error}"></span>
+                </div>
                 <button type="submit" class="btn btn-success btn-publish">コミット</button>
             </form>
         </div>
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 " >
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 ">
             <h3>问题发起指南</h3>
             • 问题标题: 请用精简的语言描述您发布的问题，不超过25字 <br>
             • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料 <br>
