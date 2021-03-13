@@ -10,4 +10,6 @@ public interface UserMapper {
     void insUser(User user);
 
     User findByToken(String token);
+
+    User findById(long id);
 }

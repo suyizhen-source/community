@@ -10,4 +10,8 @@
     <select id="findByToken" resultType="user">
         select * from user where token=#{token}
     </select>
+
+    <select id="findById" resultType="user">
+        select * from user where id=#{id}
+    </select>
 </mapper>

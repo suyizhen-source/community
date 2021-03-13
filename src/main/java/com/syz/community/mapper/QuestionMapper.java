@@ -5,8 +5,12 @@ import com.syz.community.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface QuestionMapper {
     void addQuestion(Question question);
+
+    List<Question> selAllQuestion();
 }
