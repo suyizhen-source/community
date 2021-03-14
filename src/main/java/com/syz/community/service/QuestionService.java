@@ -1,5 +1,8 @@
 package com.syz.community.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.syz.community.dto.PaginationDTO;
 import com.syz.community.dto.QuestionDto;
 import com.syz.community.mapper.QuestionMapper;
 import com.syz.community.mapper.UserMapper;
@@ -21,16 +24,32 @@ public class QuestionService {
     @Autowired
     UserMapper userMapper;
 
-    public List<QuestionDto> getQuestionList() {
+    public PaginationDTO getQuestionList(int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
         List<Question> questions = questionMapper.selAllQuestion();
+        PageInfo<Question>pageInfo = new PageInfo<>(questions);
         List<QuestionDto> questionDtoList = new ArrayList<>();
-        for (Question question:questions){
+        for (Question question:pageInfo.getList()){
             User user =userMapper.findById(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
             BeanUtils.copyProperties(question,questionDto);
             questionDto.setUser(user);
             questionDtoList.add(questionDto);
         }
-        return questionDtoList;
+        int totalPage = (int) pageInfo.getPages();
+        if (pageNo < 1) {
+            pageNo = 1;
+        }
+        if (pageNo > totalPage) {
+            pageNo = totalPage;
+        }
+        PaginationDTO paginationDTO = new PaginationDTO();
+        paginationDTO.setData(questionDtoList);
+        paginationDTO.setShowPrevious(pageInfo.isHasPreviousPage());
+        paginationDTO.setShowFirstPage(pageInfo.isIsFirstPage());
+        paginationDTO.setShowNext(pageInfo.isHasNextPage());
+        paginationDTO.setShowEndPage(pageInfo.isIsLastPage());
+        paginationDTO.setPagination(totalPage, pageNo);
+        return paginationDTO;
     }
 }

@@ -6,8 +6,8 @@
     <insert id="addQuestion" parameterType="question">
         insert into question  (title,description,creator,tag,gmt_create,gmt_modified) values (#{title},#{description},#{creator},#{tag},#{gmtCreate},#{gmtModified})
     </insert>
-
+    
     <select id="selAllQuestion" resultType="question">
-        select * from question;
+        select * from question
     </select>
 </mapper>
