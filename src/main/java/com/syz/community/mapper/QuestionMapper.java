@@ -13,4 +13,6 @@ public interface QuestionMapper {
     void addQuestion(Question question);
 
     List<Question> selAllQuestion();
+
+    List<Question> selQuestionByUser(long accountId);
 }

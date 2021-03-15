@@ -28,9 +28,22 @@ public class QuestionService {
         PageHelper.startPage(pageNo,pageSize);
         List<Question> questions = questionMapper.selAllQuestion();
         PageInfo<Question>pageInfo = new PageInfo<>(questions);
+        PaginationDTO paginationDTO = getPaginationDTO(pageInfo,pageNo);
+        return paginationDTO;
+    }
+
+    public PaginationDTO getMyQuestionList(long accountId, int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Question> questions = questionMapper.selQuestionByUser(accountId);
+        PageInfo<Question>pageInfo = new PageInfo<>(questions);
+        PaginationDTO paginationDTO = getPaginationDTO(pageInfo,pageNo);
+        return paginationDTO;
+    }
+
+    public PaginationDTO  getPaginationDTO(PageInfo<Question> pageInfo,int pageNo){
         List<QuestionDto> questionDtoList = new ArrayList<>();
         for (Question question:pageInfo.getList()){
-            User user =userMapper.findById(question.getCreator());
+            User user =userMapper.findUserByAccountId(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
             BeanUtils.copyProperties(question,questionDto);
             questionDto.setUser(user);
@@ -46,10 +59,11 @@ public class QuestionService {
         PaginationDTO paginationDTO = new PaginationDTO();
         paginationDTO.setData(questionDtoList);
         paginationDTO.setShowPrevious(pageInfo.isHasPreviousPage());
-        paginationDTO.setShowFirstPage(pageInfo.isIsFirstPage());
+        paginationDTO.setShowFirstPage(!(pageInfo.isIsFirstPage()));
         paginationDTO.setShowNext(pageInfo.isHasNextPage());
-        paginationDTO.setShowEndPage(pageInfo.isIsLastPage());
+        paginationDTO.setShowEndPage(!(pageInfo.isIsLastPage()));
         paginationDTO.setPagination(totalPage, pageNo);
         return paginationDTO;
-    }
+    };
+
 }

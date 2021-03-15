@@ -11,7 +11,8 @@
         select * from user where token=#{token}
     </select>
 
-    <select id="findById" resultType="user">
-        select * from user where id=#{id}
+    <select id="findUserByAccountId" resultType="user">
+        select distinct name,avatar_url from user where  account_id=#{accountId}
     </select>
+
 </mapper>
