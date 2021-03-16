@@ -13,4 +13,5 @@ public interface UserMapper {
 
     User findUserByAccountId(long accountId);
 
+    void updateUser(User user);
 }

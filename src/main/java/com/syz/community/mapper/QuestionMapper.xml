@@ -13,4 +13,8 @@
     <select id="selQuestionByUser" parameterType="long" resultType="question">
         select * from question where creator=#{accountId}
     </select>
+    <select id="selById"  resultType="question">
+        select * from question where id=#{id}
+    </select>
+
 </mapper>

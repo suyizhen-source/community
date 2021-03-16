@@ -5,6 +5,7 @@ import com.syz.community.mapper.UserMapper;
 import com.syz.community.pojo.GithubUser;
 import com.syz.community.pojo.User;
 import com.syz.community.provider.GithubProvider;
+import com.syz.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ public class AuthorizeController {
     GithubProvider githubProvider;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    UserService userService;
 
     @Value("${github.client.id}")
     private String clientId;
@@ -41,17 +44,15 @@ public class AuthorizeController {
         accessTokenDto.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDto);
         GithubUser githubUser = githubProvider.getUser(accessToken);
-        if (githubUser != null) {
+        if (githubUser != null && githubUser.getId() != null) {
             //ログインできたの場合
             User user = new User();
             String token = UUID.randomUUID().toString();
-            user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setName(githubUser.getName());
             user.setToken(token);
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
+            user.setName(githubUser.getName());
+            user.setAccountId(githubUser.getId());
             user.setAvatarUrl(githubUser.getAvatarUrl());
-            userMapper.insUser(user);
+            userService.createOrUpdate(user);
             response.addCookie(new Cookie("token",token));
         }
         return "redirect:/";

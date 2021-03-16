@@ -12,7 +12,9 @@
     </select>
 
     <select id="findUserByAccountId" resultType="user">
-        select distinct name,avatar_url from user where  account_id=#{accountId}
+        select * from user where  account_id=#{accountId}
     </select>
-
+    <update id="updateUser" parameterType="user">
+        update user set name=#{name},token=#{token},avatar_url=#{avatarUrl},gmt_modified=#{gmtModified} where id=#{id}
+    </update>
 </mapper>

@@ -25,7 +25,9 @@
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${question.title}"></h4>
+                    <h4 class="media-heading">
+                        <a th:href="@{/question/{id}(id=${question.id})}" th:text="${question.title}"></a>
+                    </h4>
                     <span class="text-desc">[[${question.commentCount}]]件返事• [[${question.viewCount}]] 回ブラウズ • [[${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}]]</span>
                 </div>
             </div>

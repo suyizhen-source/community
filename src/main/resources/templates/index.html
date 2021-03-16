@@ -25,7 +25,9 @@
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${question.title}"></h4>
+                    <h4 class="media-heading">
+                        <a th:href="@{/question/{id}(id=${question.id})}" th:text="${question.title}" style="color: #0f0f0f"></a>
+                    </h4>
                     <span th:text="${question.description}"></span><br>
                     <span class="text-desc">[[${question.commentCount}]]件返事• [[${question.viewCount}]] 回ブラウズ • [[${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}]]</span>
                 </div>
@@ -44,7 +46,8 @@
                         </a>
                     </li>
 
-                    <li th:each="pageNo : ${questionList.pages}" th:class="${questionList.pageNo == pageNo}? 'active' : ''">
+                    <li th:each="pageNo : ${questionList.pages}"
+                        th:class="${questionList.pageNo == pageNo}? 'active' : ''">
                         <a th:href="@{/(pageNo=${pageNo})}" th:text="${pageNo}"></a>
                     </li>
 
