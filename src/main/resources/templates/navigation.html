@@ -33,7 +33,7 @@
                            aria-expanded="false">[[${session.user.getName()}]]<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/profile/questions">マイページ</a></li>
-                            <li><a href="#">ログアウト</a></li>
+                            <li><a href="/logout">ログアウト</a></li>
                         </ul>
                     </li>
                     <li th:if="${session.user==null}">

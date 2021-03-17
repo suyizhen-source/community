@@ -17,4 +17,8 @@
         select * from question where id=#{id}
     </select>
 
+    <update id="update" parameterType="question">
+        update question set  title=#{title},description=#{description},tag=#{tag},gmt_modified=#{gmtModified} where id=#{id}
+    </update>
+
 </mapper>

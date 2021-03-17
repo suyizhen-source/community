@@ -16,4 +16,6 @@ public interface QuestionMapper {
     List<Question> selQuestionByUser(long accountId);
 
     Question selById(int id);
+
+    void update(Question question);
 }

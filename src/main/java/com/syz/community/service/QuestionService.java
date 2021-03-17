@@ -40,7 +40,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDto getQuestionById(int id) {
+    public QuestionDto getQuestionById(Integer id) {
         Question question = questionMapper.selById(id);
         QuestionDto questionDto = getQuestionDto(question);
         return questionDto;
@@ -77,6 +77,17 @@ public class QuestionService {
         paginationDTO.setPagination(totalPage, pageNo);
         return paginationDTO;
     };
+
+    public void createOrUpdate(Question question) {
+        if (question.getId() == null ){
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.addQuestion(question);
+        }else {
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.update(question);
+        }
+    }
 
 
 }
