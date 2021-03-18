@@ -1,4 +1,4 @@
-package com.syz.community.pojo;
+package com.syz.community.model;
 
 import lombok.Data;
 

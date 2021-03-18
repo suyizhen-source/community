@@ -1,18 +1,17 @@
 package com.syz.community.controller;
 
 import com.syz.community.dto.AccessTokenDto;
-import com.syz.community.mapper.UserMapper;
-import com.syz.community.pojo.GithubUser;
-import com.syz.community.pojo.User;
+import com.syz.community.model.User;
+import com.syz.community.model.GithubUser;
 import com.syz.community.provider.GithubProvider;
 import com.syz.community.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,11 +19,9 @@ import java.util.UUID;
 
 @Controller
 public class AuthorizeController {
-    @Autowired
+    @Resource
     GithubProvider githubProvider;
-    @Autowired
-    UserMapper userMapper;
-    @Autowired
+    @Resource
     UserService userService;
 
     @Value("${github.client.id}")
@@ -52,7 +49,7 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(githubUser.getName());
-            user.setAccountId(githubUser.getId());
+            user.setAccountId(String.valueOf(githubUser.getId()));
             user.setAvatarUrl(githubUser.getAvatarUrl());
             userService.createOrUpdate(user);
             response.addCookie(new Cookie("token",token));

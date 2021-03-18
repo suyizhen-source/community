@@ -1,6 +1,6 @@
 package com.syz.community.dto;
 
-import com.syz.community.pojo.User;
+import com.syz.community.model.User;
 import lombok.Data;
 
 @Data
@@ -12,7 +12,7 @@ public class QuestionDto {
     private String tag;
     private long gmtCreate;
     private long gmtModified;
-    private long creator;
+    private Integer creator;
     private long commentCount;
     private long viewCount;
     private long likeCount;

@@ -1,7 +1,7 @@
 package com.syz.community.controller;
 
 import com.syz.community.dto.PaginationDTO;
-import com.syz.community.pojo.User;
+import com.syz.community.model.User;
 import com.syz.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,7 +37,7 @@ public class ProfileController {
             model.addAttribute("sectionName","最新回答");
         }
 
-        PaginationDTO questionList = questionService.getMyQuestionList(user.getAccountId(), pageNo, pageSize);
+        PaginationDTO questionList = questionService.getMyQuestionList(user.getId(), pageNo, pageSize);
         model.addAttribute("questionList",questionList);
         return "profile";
     };

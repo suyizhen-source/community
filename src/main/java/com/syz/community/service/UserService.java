@@ -1,28 +1,32 @@
 package com.syz.community.service;
 
 import com.syz.community.mapper.UserMapper;
-import com.syz.community.pojo.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.syz.community.model.User;
+import com.syz.community.model.UserExample;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class UserService {
 
-    @Autowired
-    UserMapper userMapper;
+    @Resource
+    private UserMapper userMapper;
 
     public void createOrUpdate(User user) {
-        User dbUser = userMapper.findUserByAccountId(user.getAccountId());
-        if (dbUser==null){
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andAccountIdEqualTo(user.getAccountId());
+        List<User> users = userMapper.selectByExample(userExample);
+        if (users.size()==0){
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            userMapper.insUser(user);
+            userMapper.insert(user);
         }else {
-            dbUser.setGmtModified(System.currentTimeMillis());
-            dbUser.setName(user.getName());
-            dbUser.setAvatarUrl(user.getAvatarUrl());
-            dbUser.setToken(user.getToken());
-            userMapper.updateUser(dbUser);
+            user.setGmtModified(System.currentTimeMillis());
+            UserExample example = new UserExample();
+            example.createCriteria().andIdEqualTo(users.get(0).getId());
+            userMapper.updateByExampleSelective(user,example);
         }
     }
 }

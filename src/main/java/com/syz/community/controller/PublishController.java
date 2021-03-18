@@ -1,9 +1,8 @@
 package com.syz.community.controller;
 
 import com.syz.community.dto.QuestionDto;
-import com.syz.community.mapper.QuestionMapper;
-import com.syz.community.pojo.Question;
-import com.syz.community.pojo.User;
+import com.syz.community.model.Question;
+import com.syz.community.model.User;
 import com.syz.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,7 +61,7 @@ public class PublishController {
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
-        question.setCreator(user.getAccountId());
+        question.setCreator(user.getId());
         question.setId(id);
         questionService.createOrUpdate(question);
         return "redirect:/";

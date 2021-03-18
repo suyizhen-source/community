@@ -2,7 +2,7 @@ package com.syz.community.provider;
 
 import com.alibaba.fastjson.JSON;
 import com.syz.community.dto.AccessTokenDto;
-import com.syz.community.pojo.GithubUser;
+import com.syz.community.model.GithubUser;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 
