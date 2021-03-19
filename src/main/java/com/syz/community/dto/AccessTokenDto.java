@@ -1,5 +1,9 @@
 package com.syz.community.dto;
 
+/**
+ * GitHubユーザーDTO
+ * */
+
 public class AccessTokenDto {
     private String client_id;
     private String client_secret;

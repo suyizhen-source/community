@@ -8,9 +8,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * GitHubユーザーのログイン処理
+ * */
+
 @Component
 public class GithubProvider {
-    //ログイン処理
     public String getAccessToken(AccessTokenDto accessTokenDto) {
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
         OkHttpClient client = new OkHttpClient();

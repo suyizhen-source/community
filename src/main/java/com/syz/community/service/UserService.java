@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * userについての業務処理
+ * */
+
 @Service
 public class UserService {
 

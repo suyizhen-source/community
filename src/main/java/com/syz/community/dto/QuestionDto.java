@@ -3,6 +3,10 @@ package com.syz.community.dto;
 import com.syz.community.model.User;
 import lombok.Data;
 
+/**
+ * Question+User DTO
+ * */
+
 @Data
 public class QuestionDto {
 

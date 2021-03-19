@@ -17,6 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
+/**
+ * ログイン・ログアウト機能コントロール
+ * */
+
 @Controller
 public class AuthorizeController {
     @Resource

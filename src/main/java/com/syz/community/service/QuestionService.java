@@ -4,6 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.syz.community.dto.PaginationDTO;
 import com.syz.community.dto.QuestionDto;
+import com.syz.community.exception.CustomizeErrorCode;
+import com.syz.community.exception.CustomizeException;
+import com.syz.community.exception.ICustomizeErrorCode;
 import com.syz.community.mapper.QuestionMapper;
 import com.syz.community.mapper.UserMapper;
 import com.syz.community.model.Question;
@@ -15,6 +18,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * questionについての業務処理
+ * */
 
 @Service
 public class QuestionService {
@@ -45,6 +52,9 @@ public class QuestionService {
 
     public QuestionDto getQuestionById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question==null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDto questionDto = getQuestionDto(question);
         return questionDto;
     }
@@ -93,7 +103,10 @@ public class QuestionService {
             question.setGmtModified(System.currentTimeMillis());
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria().andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(question,questionExample);
+            int updated = questionMapper.updateByExampleSelective(question, questionExample);
+            if (updated==0){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 

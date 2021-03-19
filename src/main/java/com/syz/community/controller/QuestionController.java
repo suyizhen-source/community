@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.Resource;
 
+/**
+ * 個別質問照会機能コントロール
+ * */
+
 @Controller
 public class QuestionController {
 

@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * ホームページ画面コントロール
+ * */
+
 @Controller
 public class IndexController {
 

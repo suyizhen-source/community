@@ -6,6 +6,11 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ページネーションDTO
+ * */
+
+
 @Data
 public class PaginationDTO {
     private List<QuestionDto> data;

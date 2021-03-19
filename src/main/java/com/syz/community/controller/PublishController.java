@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 質問追加機能コントロール
+ * */
+
+
 @Controller
 public class PublishController {
 
