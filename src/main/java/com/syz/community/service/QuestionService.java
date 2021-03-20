@@ -6,7 +6,7 @@ import com.syz.community.dto.PaginationDTO;
 import com.syz.community.dto.QuestionDto;
 import com.syz.community.exception.CustomizeErrorCode;
 import com.syz.community.exception.CustomizeException;
-import com.syz.community.exception.ICustomizeErrorCode;
+import com.syz.community.mapper.QuestionExtMapper;
 import com.syz.community.mapper.QuestionMapper;
 import com.syz.community.mapper.UserMapper;
 import com.syz.community.model.Question;
@@ -31,6 +31,9 @@ public class QuestionService {
 
     @Resource
     UserMapper userMapper;
+
+    @Resource
+    QuestionExtMapper questionExtMapper;
 
     public PaginationDTO getQuestionList(int pageNo, int pageSize) {
         PageHelper.startPage(pageNo,pageSize);
@@ -110,5 +113,10 @@ public class QuestionService {
         }
     }
 
-
+    public void addViewCount(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.addViewCount(question);
+    }
 }

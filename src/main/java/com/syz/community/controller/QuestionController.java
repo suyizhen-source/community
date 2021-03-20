@@ -22,6 +22,7 @@ public class QuestionController {
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Integer id , Model model){
         QuestionDto questionDto = questionService.getQuestionById(id);
+        questionService.addViewCount(id);
         model.addAttribute("question",questionDto);
         return "question";
     }

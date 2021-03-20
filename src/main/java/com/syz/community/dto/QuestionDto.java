@@ -14,11 +14,11 @@ public class QuestionDto {
     private String title;
     private String description;
     private String tag;
+    private Integer creator;
+    private Integer commentCount;
+    private Integer viewCount;
+    private Integer likeCount;
     private long gmtCreate;
     private long gmtModified;
-    private Integer creator;
-    private long commentCount;
-    private long viewCount;
-    private long likeCount;
     private User user;
 }
