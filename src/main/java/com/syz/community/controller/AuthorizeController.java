@@ -1,6 +1,6 @@
 package com.syz.community.controller;
 
-import com.syz.community.dto.AccessTokenDto;
+import com.syz.community.dto.AccessTokenDTO;
 import com.syz.community.model.User;
 import com.syz.community.model.GithubUser;
 import com.syz.community.provider.GithubProvider;
@@ -39,7 +39,7 @@ public class AuthorizeController {
     public String callBack(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
                            HttpServletResponse response) {
-        AccessTokenDto accessTokenDto = new AccessTokenDto();
+        AccessTokenDTO accessTokenDto = new AccessTokenDTO();
         accessTokenDto.setClient_id(clientId);
         accessTokenDto.setClient_secret(clientSecret);
         accessTokenDto.setRedirect_uri(redirectUri);

@@ -1,6 +1,5 @@
 package com.syz.community.dto;
 
-import com.github.pagehelper.PageInfo;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @Data
 public class PaginationDTO {
-    private List<QuestionDto> data;
+    private List<QuestionDTO> data;
     private boolean showPrevious;
     private boolean showFirstPage;
     private boolean showNext;

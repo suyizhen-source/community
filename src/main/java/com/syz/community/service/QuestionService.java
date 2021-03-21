@@ -3,7 +3,7 @@ package com.syz.community.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.syz.community.dto.PaginationDTO;
-import com.syz.community.dto.QuestionDto;
+import com.syz.community.dto.QuestionDTO;
 import com.syz.community.exception.CustomizeErrorCode;
 import com.syz.community.exception.CustomizeException;
 import com.syz.community.mapper.QuestionExtMapper;
@@ -53,29 +53,29 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDto getQuestionById(Integer id) {
+    public QuestionDTO getQuestionById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question==null){
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
-        QuestionDto questionDto = getQuestionDto(question);
+        QuestionDTO questionDto = getQuestionDto(question);
         return questionDto;
     }
-    public QuestionDto getQuestionDto(Question question){
+    public QuestionDTO getQuestionDto(Question question){
         User user = userMapper.selectByPrimaryKey(question.getCreator());
-        QuestionDto questionDto = new QuestionDto();
+        QuestionDTO questionDto = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDto);
         questionDto.setUser(user);
         return questionDto;
     };
     public PaginationDTO  getPaginationDTO(PageInfo<Question> pageInfo,int pageNo){
-        List<QuestionDto> questionDtoList = new ArrayList<>();
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
         for (Question question:pageInfo.getList()){
             User user =userMapper.selectByPrimaryKey(question.getCreator());
-            QuestionDto questionDto = new QuestionDto();
+            QuestionDTO questionDto = new QuestionDTO();
             BeanUtils.copyProperties(question,questionDto);
             questionDto.setUser(user);
-            questionDtoList.add(questionDto);
+            questionDTOList.add(questionDto);
         }
         int totalPage = (int) pageInfo.getPages();
         if (pageNo < 1) {
@@ -85,7 +85,7 @@ public class QuestionService {
             pageNo = totalPage;
         }
         PaginationDTO paginationDTO = new PaginationDTO();
-        paginationDTO.setData(questionDtoList);
+        paginationDTO.setData(questionDTOList);
         paginationDTO.setShowPrevious(pageInfo.isHasPreviousPage());
         paginationDTO.setShowFirstPage(!(pageInfo.isIsFirstPage()));
         paginationDTO.setShowNext(pageInfo.isHasNextPage());

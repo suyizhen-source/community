@@ -1,6 +1,6 @@
 package com.syz.community.controller;
 
-import com.syz.community.dto.QuestionDto;
+import com.syz.community.dto.QuestionDTO;
 import com.syz.community.model.Question;
 import com.syz.community.model.User;
 import com.syz.community.service.QuestionService;
@@ -26,7 +26,7 @@ public class PublishController {
 
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(name = "id") Integer id, Model model){
-        QuestionDto question = questionService.getQuestionById(id);
+        QuestionDTO question = questionService.getQuestionById(id);
         model.addAttribute("id",id);
         model.addAttribute("title", question.getTitle());
         model.addAttribute("description", question.getDescription());

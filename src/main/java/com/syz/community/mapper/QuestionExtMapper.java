@@ -4,4 +4,5 @@ import com.syz.community.model.Question;
 
 public interface QuestionExtMapper {
     int addViewCount(Question question);
+    int addCommentCount(Question question);
 }
