@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -17,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class IndexController {
 
-    @Autowired
-    QuestionService questionService;
+    @Resource
+    private QuestionService questionService;
 
     @RequestMapping("/")
     public String index(HttpServletRequest request, Model model,

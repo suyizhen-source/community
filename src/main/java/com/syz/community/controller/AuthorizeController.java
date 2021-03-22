@@ -24,9 +24,9 @@ import java.util.UUID;
 @Controller
 public class AuthorizeController {
     @Resource
-    GithubProvider githubProvider;
+    private GithubProvider githubProvider;
     @Resource
-    UserService userService;
+    private UserService userService;
 
     @Value("${github.client.id}")
     private String clientId;

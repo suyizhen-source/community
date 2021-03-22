@@ -27,13 +27,13 @@ import java.util.List;
 public class QuestionService {
 
     @Resource
-    QuestionMapper questionMapper;
+    private QuestionMapper questionMapper;
 
     @Resource
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Resource
-    QuestionExtMapper questionExtMapper;
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO getQuestionList(int pageNo, int pageSize) {
         PageHelper.startPage(pageNo,pageSize);

@@ -1,26 +1,35 @@
 package com.syz.community.service;
 
+import com.syz.community.dto.CommentDTO;
 import com.syz.community.enums.CommentTypeEnum;
 import com.syz.community.exception.CustomizeErrorCode;
 import com.syz.community.exception.CustomizeException;
 import com.syz.community.mapper.CommentMapper;
 import com.syz.community.mapper.QuestionExtMapper;
 import com.syz.community.mapper.QuestionMapper;
-import com.syz.community.model.Comment;
-import com.syz.community.model.Question;
+import com.syz.community.mapper.UserMapper;
+import com.syz.community.model.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
     @Resource
-    CommentMapper commentMapper;
+    private CommentMapper commentMapper;
     @Resource
-    QuestionMapper questionMapper;
+    private QuestionMapper questionMapper;
     @Resource
-    QuestionExtMapper questionExtMapper;
+    private QuestionExtMapper questionExtMapper;
+    @Resource
+    private UserMapper userMapper;
 
     @Transactional
     public void insert(Comment comment) {
@@ -49,5 +58,34 @@ public class CommentService {
                 questionExtMapper.addCommentCount(dbQuestion);
             }
         }
+    }
+
+    public List<CommentDTO> selComListByQueId(Integer id) {
+        CommentExample commentExample = new CommentExample();
+        commentExample.createCriteria()
+                .andParentIdEqualTo(id).
+                andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+        commentExample.setOrderByClause("GMT_CREATE DESC");
+        List<Comment> comments = commentMapper.selectByExample(commentExample);
+        if (comments.size()==0){return new ArrayList<>();}
+        //コメント者idを取得する
+        Set<Integer> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
+        List<Integer> usersId = new ArrayList<>();
+        usersId.addAll(commentators);
+
+        //idでコメント者を取得する key:id values:user
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andIdIn(usersId);
+        List<User> users = userMapper.selectByExample(userExample);
+        Map<Integer, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
+
+        //comment →　commentDTOへ変更する
+        List<CommentDTO> commentDTOList = comments.stream().map(comment -> {
+            CommentDTO commentDTO = new CommentDTO();
+            BeanUtils.copyProperties(comment, commentDTO);
+            commentDTO.setUser(userMap.get(comment.getCommentator()));
+            return commentDTO;
+        }).collect(Collectors.toList());
+        return commentDTOList;
     }
 }
