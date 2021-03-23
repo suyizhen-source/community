@@ -25,6 +25,7 @@ public class PublishController {
     @Resource
     private QuestionService questionService;
 
+    //質問を編集する場合
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(name = "id") Integer id, Model model){
         QuestionDTO question = questionService.getQuestionById(id);

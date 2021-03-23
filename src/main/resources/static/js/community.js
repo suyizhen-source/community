@@ -1,9 +1,6 @@
 
 // コメントする
-function post() {
-    let parentId = $("#question_id").val();
-    let content = $("#comment_content").val();
-
+function commit(targetID,content,type) {
     if (!content){
         alert("空欄のコメントをコミットすることができません。");
         return;
@@ -14,9 +11,9 @@ function post() {
         url: "/comment",
         contentType: "application/json",
         data: JSON.stringify({
-            "parentId": parentId,
+            "parentId": targetID,
             "content": content,
-            "type": 1
+            "type": type
         }),
         success: function (response) {
             if (response.code == 200) {
@@ -37,6 +34,17 @@ function post() {
         dataType: "json"
     });
 }
+function post() {
+    let parentId = $("#question_id").val();
+    let content = $("#comment_content").val();
+    commit(parentId,content,1);
+}
+function comment(e) {
+    let commentId = e.getAttribute("data-id");
+    let content = $("#input-" + commentId).val();
+    commit(commentId,content,2);
+}
+
 //二級コメントを展開する
 function collapseComments(e){
     let id = e.getAttribute("data-id");

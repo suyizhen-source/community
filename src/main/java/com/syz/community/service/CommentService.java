@@ -60,11 +60,11 @@ public class CommentService {
         }
     }
 
-    public List<CommentDTO> selComListByQueId(Integer id) {
+    public List<CommentDTO> getComListByQueId(Integer id, CommentTypeEnum typeEnum) {
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id).
-                andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                andTypeEqualTo(typeEnum.getType());
         commentExample.setOrderByClause("GMT_CREATE DESC");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
         if (comments.size()==0){return new ArrayList<>();}

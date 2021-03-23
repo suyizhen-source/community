@@ -77,8 +77,8 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-                                    <input type="text" class="form-control" placeholder="Text input">
-                                    <button type="button" class="btn btn-success btn-comment">回答</button>
+                                    <input type="text" class="form-control" placeholder="コメント" th:id="'input-'+${comment.id}">
+                                    <button type="button" class="btn btn-success btn-comment" th:data-id="${comment.id}" onclick="comment(this)">回答</button>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                 <!--コメント入力場所-->
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                     <h4>
-                        <span>コメントする</span>
+                        <span>コメント</span>
                     </h4>
                     <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " id="comment_section">

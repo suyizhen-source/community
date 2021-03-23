@@ -2,6 +2,7 @@ package com.syz.community.controller;
 
 import com.syz.community.dto.CommentDTO;
 import com.syz.community.dto.QuestionDTO;
+import com.syz.community.enums.CommentTypeEnum;
 import com.syz.community.service.CommentService;
 import com.syz.community.service.QuestionService;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class QuestionController {
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Integer id , Model model){
         QuestionDTO questionDto = questionService.getQuestionById(id);
-        List<CommentDTO> commentList= commentService.selComListByQueId(id);
+        List<CommentDTO> commentList= commentService.getComListByQueId(id, CommentTypeEnum.QUESTION);
         questionService.addViewCount(id);
         model.addAttribute("question",questionDto);
         model.addAttribute("commentList",commentList);
