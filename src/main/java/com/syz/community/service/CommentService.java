@@ -4,10 +4,7 @@ import com.syz.community.dto.CommentDTO;
 import com.syz.community.enums.CommentTypeEnum;
 import com.syz.community.exception.CustomizeErrorCode;
 import com.syz.community.exception.CustomizeException;
-import com.syz.community.mapper.CommentMapper;
-import com.syz.community.mapper.QuestionExtMapper;
-import com.syz.community.mapper.QuestionMapper;
-import com.syz.community.mapper.UserMapper;
+import com.syz.community.mapper.*;
 import com.syz.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -29,6 +26,8 @@ public class CommentService {
     @Resource
     private QuestionExtMapper questionExtMapper;
     @Resource
+    private CommentExtMapper commentExtMapper;
+    @Resource
     private UserMapper userMapper;
 
     @Transactional
@@ -46,6 +45,8 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             } else {
                 commentMapper.insert(comment);
+                dbComment.setCommentCount(1);
+                commentExtMapper.addCommentCount(dbComment);
             }
         } else {
             //問題を返事する

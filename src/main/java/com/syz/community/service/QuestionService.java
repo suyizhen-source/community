@@ -12,12 +12,14 @@ import com.syz.community.mapper.UserMapper;
 import com.syz.community.model.Question;
 import com.syz.community.model.QuestionExample;
 import com.syz.community.model.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * questionについての業務処理
@@ -37,7 +39,9 @@ public class QuestionService {
 
     public PaginationDTO getQuestionList(int pageNo, int pageSize) {
         PageHelper.startPage(pageNo,pageSize);
-        List<Question> questions = questionMapper.selectByExample(new QuestionExample());
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause("gmt_create DESC");
+        List<Question> questions = questionMapper.selectByExample(questionExample);
         PageInfo<Question>pageInfo = new PageInfo<>(questions);
         PaginationDTO paginationDTO = getPaginationDTO(pageInfo,pageNo);
         return paginationDTO;
@@ -118,5 +122,22 @@ public class QuestionService {
         question.setId(id);
         question.setViewCount(1);
         questionExtMapper.addViewCount(question);
+    }
+
+    public List<QuestionDTO> selectRelated(QuestionDTO queryDto) {
+        if (StringUtils.isBlank(queryDto.getTag())){
+            return new ArrayList<>();
+        }
+        String replace = StringUtils.replace(queryDto.getTag(), ",", "|");
+        Question question = new Question();
+        question.setId(queryDto.getId());
+        question.setTag(replace);
+        List<Question> questionList = questionExtMapper.selectRelated(question);
+        List<QuestionDTO> questionDTOList = questionList.stream().map(q -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(q, questionDTO);
+            return questionDTO;
+        }).collect(Collectors.toList());
+        return questionDTOList;
     }
 }

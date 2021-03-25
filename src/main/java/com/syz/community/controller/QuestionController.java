@@ -29,10 +29,12 @@ public class QuestionController {
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Integer id , Model model){
         QuestionDTO questionDto = questionService.getQuestionById(id);
+        List<QuestionDTO> relatedQuestions= questionService.selectRelated(questionDto);
         List<CommentDTO> commentList= commentService.getComListByQueId(id, CommentTypeEnum.QUESTION);
         questionService.addViewCount(id);
         model.addAttribute("question",questionDto);
         model.addAttribute("commentList",commentList);
+        model.addAttribute("relatedQuestions",relatedQuestions);
         return "question";
     }
 
