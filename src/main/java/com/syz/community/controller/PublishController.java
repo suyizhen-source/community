@@ -1,10 +1,11 @@
 package com.syz.community.controller;
 
+import com.syz.community.cache.TagCache;
 import com.syz.community.dto.QuestionDTO;
 import com.syz.community.model.Question;
 import com.syz.community.model.User;
 import com.syz.community.service.QuestionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,12 +34,14 @@ public class PublishController {
         model.addAttribute("title", question.getTitle());
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
+        model.addAttribute("tags", TagCache.get());
         return "/publish";
     }
 
     //質問するをクリックする場合
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tags", TagCache.get());
         return "/publish";
     }
     //質問をコミットする場合
@@ -47,6 +50,7 @@ public class PublishController {
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
+        model.addAttribute("tags", TagCache.get());
         if (title == null || title.equals("")) {
             model.addAttribute("error", "タイトルを入力してください。");
             return "/publish";
@@ -62,6 +66,11 @@ public class PublishController {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             model.addAttribute("error", "ログインしてください。");
+            return "/publish";
+        }
+        String invalid = TagCache.filterInvalid(tag);
+        if (StringUtils.isNotBlank(invalid)) {
+            model.addAttribute("error", "タグが正しくありません："+invalid);
             return "/publish";
         }
         Question question = new Question();

@@ -91,3 +91,22 @@ function collapseComments(e) {
     comment.toggleClass("in");
     btn.toggleClass("active");
 }
+function showSelectTag(){
+    $("#select-tag").show();
+    $("#error").hide();
+}
+function hideSelectTag(){
+    $("#select-tag").hide();
+}
+
+function selectTag(e) {
+    let value = e.getAttribute("data-tag");
+    let previous = $("#tag").val();
+    if (previous) {
+        if (previous.indexOf(value) == -1) {
+            $("#tag").val(previous + ',' + value);
+        }
+    } else {
+        $("#tag").val(value);
+    }
+}
