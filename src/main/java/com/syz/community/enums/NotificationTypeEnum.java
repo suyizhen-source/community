@@ -1,8 +1,8 @@
 package com.syz.community.enums;
 
 public enum NotificationTypeEnum {
-    REPLY_QUESTION(1, "あなたの質問を回答しました。"),
-    REPLY_COMMENT(2, "コメントについて回答しました。");
+    REPLY_QUESTION(1, "の質問を回答しました。"),
+    REPLY_COMMENT(2, "のコメントについて回答しました。");
     private int type;
     private String name;
 
