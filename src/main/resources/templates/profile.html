@@ -18,56 +18,75 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 ">
             <h2><span th:text="${sectionName}"></span></h2>
             <hr>
-            <div class="media" th:each="question:${questionList.data}">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object img-rounded" th:src="${question.user.avatarUrl}">
-                    </a>
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading">
-                        <a th:href="@{/question/{id}(id=${question.id})}" th:text="${question.title}"></a>
-                    </h4>
-                    <span class="text-desc">[[${question.commentCount}]]件返事• [[${question.viewCount}]] 回ブラウズ • [[${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}]]</span>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " th:if="${section}=='questions'">
+                <div class="media" th:each="question:${pagination.data}">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded" th:src="${question.user.avatarUrl}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a th:href="@{/question/{id}(id=${question.id})}" th:text="${question.title}"></a>
+                        </h4>
+                        <span class="text-desc">[[${question.commentCount}]]件返事• [[${question.viewCount}]] 回ブラウズ • [[${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}]] • </span>
+                        <a th:href="@{/publish/{id}(id=${question.id})} " class="community-menu"
+                           th:if="${session.user!=null && session.user.id==question.creator}">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true">編集</span>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li th:if="${questionList.showFirstPage}">
-                        <a th:href="@{/profile/{section}/(section=${section},pageNo=1)}" aria-label="Previous">
-                            <span aria-hidden="true">&lt;&lt;</span>
-                        </a>
-                    </li>
-                    <li th:if="${questionList.showPrevious}">
-                        <a th:href="@{/profile/{section}/(section=${section},pageNo=${questionList.pageNo - 1})}"
-                           aria-label="Previous">
-                            <span aria-hidden="true">&lt;</span>
-                        </a>
-                    </li>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " th:if="${section}=='replies'">
+                <div class="media" th:each="notification:${pagination.data}">
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a th:href="@{/notification/{id}(id=${notification.id})}" th:text="${notification.notifierName +' '+notification.type +' '+notification.outerTitle }"></a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li th:if="${pagination.showFirstPage}">
+                            <a th:href="@{/profile/{section}/(section=${section},pageNo=1)}" aria-label="Previous">
+                                <span aria-hidden="true">&lt;&lt;</span>
+                            </a>
+                        </li>
+                        <li th:if="${pagination.showPrevious}">
+                            <a th:href="@{/profile/{section}/(section=${section},pageNo=${pagination.pageNo - 1})}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&lt;</span>
+                            </a>
+                        </li>
 
-                    <li th:each="pageNo : ${questionList.pages}" th:class="${questionList.pageNo == pageNo}? 'active' : ''">
-                        <a th:href="@{/profile/{section}/(section=${section},pageNo=${pageNo})}" th:text="${pageNo}"></a>
-                    </li>
+                        <li th:each="pageNo : ${pagination.pages}" th:class="${pagination.pageNo == pageNo}? 'active' : ''">
+                            <a th:href="@{/profile/{section}/(section=${section},pageNo=${pageNo})}" th:text="${pageNo}"></a>
+                        </li>
 
-                    <li th:if="${questionList.showNext}">
-                        <a th:href="@{/profile/{section}/(section=${section},pageNo=${questionList.pageNo +1})}"
-                           aria-label="Previous">
-                            <span aria-hidden="true">&gt;</span>
-                        </a>
-                    </li>
-                    <li th:if="${questionList.showEndPage}">
-                        <a th:href="@{/profile/{section}/(section=${section},pageNo=${questionList.totalPage})}"
-                           aria-label="Previous">
-                            <span aria-hidden="true">&gt;&gt;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+                        <li th:if="${pagination.showNext}">
+                            <a th:href="@{/profile/{section}/(section=${section},pageNo=${pagination.pageNo +1})}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&gt;</span>
+                            </a>
+                        </li>
+                        <li th:if="${pagination.showEndPage}">
+                            <a th:href="@{/profile/{section}/(section=${section},pageNo=${pagination.totalPage})}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&gt;&gt;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 ">
             <div class="list-group section">
                 <a href="/profile/questions" th:class="${section}=='questions'?'list-group-item active':'list-group-item'">私の質問</a>
-                <a href="/profile/replies" th:class="${section}=='replies'?'list-group-item active':'list-group-item'">最新回答</a>
+                <a href="/profile/replies" th:class="${section}=='replies'?'list-group-item active':'list-group-item'">最新回答
+                <span class="badge" th:text="${unreadCount}"></span>
+                </a>
             </div>
         </div>
     </div>

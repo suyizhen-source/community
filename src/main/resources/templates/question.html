@@ -58,16 +58,16 @@
                             <div th:text="${comment.content}"></div>
                             <div class="menu">
                                 <span class="glyphicon glyphicon-thumbs-up icon"></span>
-                                <span class="glyphicon glyphicon-comment icon" th:id="'commentBtn-'+${comment.id}"
+                                <span class="glyphicon glyphicon-comment icon" th:id="${'commentBtn-'+comment.id}"
                                       th:data-id="${comment.id}" onclick="collapseComments(this)">[[${comment.commentCount}]]</span>
                                 <span class="text-desc pull-right">[[${#dates.format(comment.gmtCreate,'yyyy-MM-dd')}]]</span>
                             </div>
                             <!--二級コメント-->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sub-comments collapse"
-                                 th:id="'comment-'+${comment.id}">
+                                 th:id="${'comment-'+comment.id}">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                     <input type="text" class="form-control" placeholder="コメント"
-                                           th:id="'input-'+${comment.id}">
+                                           th:id="${'input-'+comment.id}">
                                     <button type="button" class="btn btn-success btn-comment" th:data-id="${comment.id}"
                                             onclick="comment(this)">回答
                                     </button>

@@ -2,6 +2,8 @@ package com.syz.community.service;
 
 import com.syz.community.dto.CommentDTO;
 import com.syz.community.enums.CommentTypeEnum;
+import com.syz.community.enums.NotificationStatusEnum;
+import com.syz.community.enums.NotificationTypeEnum;
 import com.syz.community.exception.CustomizeErrorCode;
 import com.syz.community.exception.CustomizeException;
 import com.syz.community.mapper.*;
@@ -29,9 +31,11 @@ public class CommentService {
     private CommentExtMapper commentExtMapper;
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private NotificationMapper notificationMapper;
 
     @Transactional
-    public void insert(Comment comment) {
+    public void insert(Comment comment, User commentator) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -43,11 +47,17 @@ public class CommentService {
             Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
-            } else {
-                commentMapper.insert(comment);
-                dbComment.setCommentCount(1);
-                commentExtMapper.addCommentCount(dbComment);
             }
+            //コメントする問題を取得する
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if (question == null) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+            commentMapper.insert(comment);
+            dbComment.setCommentCount(1);
+            commentExtMapper.addCommentCount(dbComment);
+            //メッセージを追加
+            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT);
         } else {
             //問題を返事する
             Question dbQuestion = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -57,8 +67,23 @@ public class CommentService {
                 commentMapper.insert(comment);
                 dbQuestion.setCommentCount(1);
                 questionExtMapper.addCommentCount(dbQuestion);
+                //メッセージを追加
+                createNotify(comment, dbQuestion.getCreator(), commentator.getName(), dbQuestion.getTitle(), NotificationTypeEnum.REPLY_QUESTION);
             }
         }
+    }
+
+    private void createNotify(Comment comment, Integer receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationTypeEnum) {
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setType(notificationTypeEnum.getType());
+        notification.setOuterId(comment.getParentId());
+        notification.setNotifier(comment.getCommentator());
+        notification.setNotifierName(notifierName);
+        notification.setReceiver(receiver);
+        notification.setOuterTitle(outerTitle);
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notificationMapper.insert(notification);
     }
 
     public List<CommentDTO> getComListByQueId(Integer id, CommentTypeEnum typeEnum) {
@@ -68,7 +93,9 @@ public class CommentService {
                 andTypeEqualTo(typeEnum.getType());
         commentExample.setOrderByClause("GMT_CREATE DESC");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
-        if (comments.size()==0){return new ArrayList<>();}
+        if (comments.size() == 0) {
+            return new ArrayList<>();
+        }
         //コメント者idを取得する
         Set<Integer> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
         List<Integer> usersId = new ArrayList<>();

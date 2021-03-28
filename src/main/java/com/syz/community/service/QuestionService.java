@@ -51,6 +51,7 @@ public class QuestionService {
         PageHelper.startPage(pageNo,pageSize);
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(accountId);
+        questionExample.setOrderByClause("gmt_create DESC");
         List<Question> questions = questionMapper.selectByExample(questionExample);
         PageInfo<Question>pageInfo = new PageInfo<>(questions);
         PaginationDTO paginationDTO = getPaginationDTO(pageInfo,pageNo);
