@@ -7,7 +7,9 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     SYS_ERROR(2003, "システムエラーが発生しました。管理者と連絡してください。"),
     TYPE_PARAM_WRONG(2004, "申し訳ございませんが、予想外のエラーが発生しました。最初からやり直してください。"),
     COMMENT_NOT_FOUND(2005, "申し訳ございませんが、このコメントが削除されました。"),
-    COMMENT_IS_EMPTY(2005, "コメントを入力してください。"),
+    COMMENT_IS_EMPTY(2006, "コメントを入力してください。"),
+    READ_NOTIFICATION_FAIL(2007, "この問題を見ることができません。"),
+    NOTIFICATION_NOT_FOUND(2008, "申し訳ございませんが、このメッセージが削除されました。"),
     ;
 
     private Integer code;

@@ -44,7 +44,8 @@
                             <span th:text="${notification.notifierName +'さんは '}"></span>
                             <a th:href="@{/notification/{id}(id=${notification.id})}"
                                th:text="${notification.outerTitle}"></a>
-                            <span th:text="${' '+notification.type +' '}"></span>
+                            <span th:text="${' '+notification.typeName +' '}"></span>
+                            <span class="label label-danger" th:if="${notification.status==0}">未読</span>
                         </p>
                     </div>
                 </div>
@@ -88,7 +89,7 @@
             <div class="list-group section">
                 <a href="/profile/questions" th:class="${section}=='questions'?'list-group-item active':'list-group-item'">私の質問</a>
                 <a href="/profile/replies" th:class="${section}=='replies'?'list-group-item active':'list-group-item'">最新回答
-                <span class="badge" th:text="${unreadCount}"></span>
+                <span class="badge" th:text="${session.unReadMessage}"></span>
                 </a>
             </div>
         </div>

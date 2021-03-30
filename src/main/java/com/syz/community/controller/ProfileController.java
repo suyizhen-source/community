@@ -46,9 +46,7 @@ public class ProfileController {
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回答");
             PaginationDTO notificationList = notificationService.getMyNotification(user.getId(), pageNo, pageSize);
-            long unreadCount = notificationService.getUnreadCount(user.getId());
             model.addAttribute("pagination", notificationList);
-            model.addAttribute("unreadCount", unreadCount);
         }
         return "profile";
     }
