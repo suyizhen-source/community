@@ -53,35 +53,38 @@ public class CommentService {
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
-            commentMapper.insert(comment);
+            commentMapper.insertSelective(comment);
             dbComment.setCommentCount(1);
             commentExtMapper.addCommentCount(dbComment);
             //メッセージを追加
-            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT, question.getId());
+            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question, NotificationTypeEnum.REPLY_COMMENT);
         } else {
             //問題を返事する
             Question dbQuestion = questionMapper.selectByPrimaryKey(comment.getParentId());
             if (dbQuestion == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             } else {
-                commentMapper.insert(comment);
+                commentMapper.insertSelective(comment);
                 dbQuestion.setCommentCount(1);
                 questionExtMapper.addCommentCount(dbQuestion);
                 //メッセージを追加
-                createNotify(comment, dbQuestion.getCreator(), commentator.getName(), dbQuestion.getTitle(), NotificationTypeEnum.REPLY_QUESTION, dbQuestion.getId());
+                createNotify(comment, dbQuestion.getCreator(), commentator.getName(), dbQuestion, NotificationTypeEnum.REPLY_QUESTION);
             }
         }
     }
 
-    private void createNotify(Comment comment, Integer receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationTypeEnum, Integer outerId) {
+    private void createNotify(Comment comment, Integer receiver, String notifierName, Question question, NotificationTypeEnum notificationTypeEnum){
+        if (receiver==comment.getCommentator()){
+            return;
+        }
         Notification notification = new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setType(notificationTypeEnum.getType());
-        notification.setOuterId(outerId);
+        notification.setOuterId(question.getId());
         notification.setNotifier(comment.getCommentator());
         notification.setNotifierName(notifierName);
         notification.setReceiver(receiver);
-        notification.setOuterTitle(outerTitle);
+        notification.setOuterTitle(question.getTitle());
         notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
         notificationMapper.insert(notification);
     }

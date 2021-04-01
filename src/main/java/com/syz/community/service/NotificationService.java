@@ -26,6 +26,9 @@ public class NotificationService {
     @Resource
     NotificationMapper notificationMapper;
 
+    @Resource
+    private PaginationService paginationService;
+
     public PaginationDTO getMyNotification(Integer accountId, int pageNo, int pageSize) {
         PageHelper.startPage(pageNo, pageSize);
         NotificationExample notificationExample = new NotificationExample();
@@ -45,20 +48,7 @@ public class NotificationService {
             notificationDTO.setTypeName(NotificationTypeEnum.nameOfType(notification.getType()));
             notificationDTOList.add(notificationDTO);
         }
-        int totalPage = (int) pageInfo.getPages();
-        if (pageNo < 1) {
-            pageNo = 1;
-        }
-        if (pageNo > totalPage) {
-            pageNo = totalPage;
-        }
-        PaginationDTO paginationDTO = new PaginationDTO();
-        paginationDTO.setData(notificationDTOList);
-        paginationDTO.setShowPrevious(pageInfo.isHasPreviousPage());
-        paginationDTO.setShowFirstPage(!(pageInfo.isIsFirstPage()));
-        paginationDTO.setShowNext(pageInfo.isHasNextPage());
-        paginationDTO.setShowEndPage(!(pageInfo.isIsLastPage()));
-        paginationDTO.setPagination(totalPage, pageNo);
+        PaginationDTO paginationDTO = paginationService.setPaginationDTO(pageInfo, notificationDTOList, pageNo);
         return paginationDTO;
     }
 

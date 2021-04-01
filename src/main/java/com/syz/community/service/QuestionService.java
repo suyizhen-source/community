@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * questionについての業務処理
- * */
+ */
 
 @Service
 public class QuestionService {
@@ -37,82 +37,75 @@ public class QuestionService {
     @Resource
     private QuestionExtMapper questionExtMapper;
 
+    @Resource
+    private PaginationService paginationService;
+
     public PaginationDTO getQuestionList(int pageNo, int pageSize) {
-        PageHelper.startPage(pageNo,pageSize);
+        PageHelper.startPage(pageNo, pageSize);
         QuestionExample questionExample = new QuestionExample();
         questionExample.setOrderByClause("gmt_create DESC");
         List<Question> questions = questionMapper.selectByExample(questionExample);
-        PageInfo<Question>pageInfo = new PageInfo<>(questions);
-        PaginationDTO paginationDTO = getPaginationDTO(pageInfo,pageNo);
+        PageInfo<Question> pageInfo = new PageInfo<>(questions);
+        PaginationDTO paginationDTO = getPaginationDTO(pageInfo, pageNo);
         return paginationDTO;
     }
 
     public PaginationDTO getMyQuestionList(Integer accountId, int pageNo, int pageSize) {
-        PageHelper.startPage(pageNo,pageSize);
+        PageHelper.startPage(pageNo, pageSize);
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(accountId);
         questionExample.setOrderByClause("gmt_create DESC");
         List<Question> questions = questionMapper.selectByExample(questionExample);
-        PageInfo<Question>pageInfo = new PageInfo<>(questions);
-        PaginationDTO paginationDTO = getPaginationDTO(pageInfo,pageNo);
+        PageInfo<Question> pageInfo = new PageInfo<>(questions);
+        PaginationDTO paginationDTO = getPaginationDTO(pageInfo, pageNo);
         return paginationDTO;
     }
 
     public QuestionDTO getQuestionById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
-        if (question==null){
+        if (question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
         QuestionDTO questionDto = getQuestionDto(question);
         return questionDto;
     }
-    public QuestionDTO getQuestionDto(Question question){
+
+    public QuestionDTO getQuestionDto(Question question) {
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDto = new QuestionDTO();
-        BeanUtils.copyProperties(question,questionDto);
+        BeanUtils.copyProperties(question, questionDto);
         questionDto.setUser(user);
         return questionDto;
-    };
-    public PaginationDTO  getPaginationDTO(PageInfo<Question> pageInfo,int pageNo){
+    }
+
+    ;
+
+    public PaginationDTO getPaginationDTO(PageInfo<Question> pageInfo, int pageNo) {
         List<QuestionDTO> questionDTOList = new ArrayList<>();
-        for (Question question:pageInfo.getList()){
-            User user =userMapper.selectByPrimaryKey(question.getCreator());
+        for (Question question : pageInfo.getList()) {
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDto = new QuestionDTO();
-            BeanUtils.copyProperties(question,questionDto);
+            BeanUtils.copyProperties(question, questionDto);
             questionDto.setUser(user);
             questionDTOList.add(questionDto);
         }
-        int totalPage = (int) pageInfo.getPages();
-        if (pageNo < 1) {
-            pageNo = 1;
-        }
-        if (pageNo > totalPage) {
-            pageNo = totalPage;
-        }
-        PaginationDTO paginationDTO = new PaginationDTO();
-        paginationDTO.setData(questionDTOList);
-        paginationDTO.setShowPrevious(pageInfo.isHasPreviousPage());
-        paginationDTO.setShowFirstPage(!(pageInfo.isIsFirstPage()));
-        paginationDTO.setShowNext(pageInfo.isHasNextPage());
-        paginationDTO.setShowEndPage(!(pageInfo.isIsLastPage()));
-        paginationDTO.setPagination(totalPage, pageNo);
+        PaginationDTO paginationDTO = paginationService.setPaginationDTO(pageInfo, questionDTOList, pageNo);
         return paginationDTO;
-    };
+    }
+
+    ;
 
     public void createOrUpdate(Question question) {
-        if (question.getId() == null ){
-            question.setViewCount(0);
-            question.setLikeCount(0);
-            question.setCommentCount(0);
+        if (question.getId() == null) {
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
-            questionMapper.insert(question);
-        }else {
+            questionMapper.insertSelective(question);
+        } else {
             question.setGmtModified(System.currentTimeMillis());
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria().andIdEqualTo(question.getId());
             int updated = questionMapper.updateByExampleSelective(question, questionExample);
-            if (updated==0){
+            if (updated == 0) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
@@ -126,7 +119,7 @@ public class QuestionService {
     }
 
     public List<QuestionDTO> selectRelated(QuestionDTO queryDto) {
-        if (StringUtils.isBlank(queryDto.getTag())){
+        if (StringUtils.isBlank(queryDto.getTag())) {
             return new ArrayList<>();
         }
         String replace = StringUtils.replace(queryDto.getTag(), ",", "|");
