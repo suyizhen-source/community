@@ -8,11 +8,11 @@
     <script src="/js/jquery-3.5.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/community.js"></script>
-    <script src="/editormd/editormd.min.js"></script>
+    <script src="/summernote/summernote.min.js"></script>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
-    <link rel="stylesheet" href="/editormd/css/editormd.css">
+    <link rel="stylesheet" href="/summernote/summernote.min.css">
 </head>
 <body>
 <div th:insert="navigation :: nav"></div>
@@ -29,11 +29,20 @@
                            autocomplete="off"
                            th:value="${title}">
                 </div>
-                <div class="form-group" id="question-editor">
+                <div class="form-group">
                     <label for="description">質問内容(必須、右側のガイドを参照)：</label>
-                    <textarea id="description" name="description" class="form-control" cols="30" rows="10"
-                              style="display:none;"
+                    <textarea id="description" name="description" class="form-control"
                               th:text="${description}"></textarea>
+                    <script>
+                        $(document).ready(function () {
+                            $('#description').summernote({
+                                height: 300,
+                                minHeight: null,
+                                maxHeight: null,
+                                focus: true
+                            });
+                        });
+                    </script>
                 </div>
                 <div class="form-group">
                     <label for="tag">タグ：</label>
@@ -76,18 +85,5 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(function() {
-        let editor = editormd("question-editor", {
-            width: "100%",
-            height: 350,
-            path: "/editormd/lib/",
-            delay:0,
-            watch:false,
-            placeholder:"質問を入力してください。",
-            imageUpload:false
-        });
-    });
-</script>
 </body>
 </html>
