@@ -110,3 +110,30 @@ function selectTag(e) {
         $("#tag").val(value);
     }
 }
+
+function saveFile(files, editor, welEditable) {
+    let data = new FormData();//存放上传的文件数据
+    data.append("file", files);
+    $.ajax({
+        data : data,
+        type : "POST",
+        url : "/upload/img",
+        cache : false,
+        contentType : false,
+        processData : false,
+        dataType : "json",
+        success: function(src) {
+            if(src!=null&&src!=""){
+                //上传成功，处理逻辑
+                //回显图片
+                editor.insertImage(welEditable, src);
+            }else{
+                //上传失败，处理逻辑
+                alert(src.message)
+            }
+        },
+        error:function(){
+            //上传出错，处理逻辑
+        }
+    });
+}

@@ -10,6 +10,7 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     COMMENT_IS_EMPTY(2006, "コメントを入力してください。"),
     READ_NOTIFICATION_FAIL(2007, "この問題を見ることができません。"),
     NOTIFICATION_NOT_FOUND(2008, "申し訳ございませんが、このメッセージが削除されました。"),
+    IMAGE_UPLOAD_FAIL(2009, "申し訳ございませんが、この写真をアップロードすることができません。。"),
     ;
 
     private Integer code;
