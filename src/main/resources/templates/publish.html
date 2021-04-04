@@ -40,8 +40,13 @@
                         minHeight: null,
                         maxHeight: null,
                         focus: true,
-                        onImageLinkInsert: function(files, editor, welEditable) {
-                            saveFile(files[0], editor, welEditable);
+                        callbacks: {
+                            onImageUpload: function (files) {
+                                sendFile(files[0]);
+                            },
+                            onMediaDelete: function (target) {
+                                removeFile(target);
+                            }
                         }
                     });
                 </script>

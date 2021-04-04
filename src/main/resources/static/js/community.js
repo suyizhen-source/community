@@ -111,29 +111,40 @@ function selectTag(e) {
     }
 }
 
-function saveFile(files, editor, welEditable) {
+function sendFile(files) {
     let data = new FormData();//存放上传的文件数据
     data.append("file", files);
     $.ajax({
-        data : data,
         type : "POST",
-        url : "/upload/img",
+        url : "/uploadImg",
+        data : data,
         cache : false,
         contentType : false,
         processData : false,
-        dataType : "json",
-        success: function(src) {
-            if(src!=null&&src!=""){
-                //上传成功，处理逻辑
-                //回显图片
-                editor.insertImage(welEditable, src);
-            }else{
-                //上传失败，处理逻辑
-                alert(src.message)
-            }
+        success: function(data) {
+            $('#summernote').summernote('insertImage','http://localhost:8080/images/'+data.fileName);
         },
-        error:function(){
-            //上传出错，处理逻辑
+        error:function(data){
+            alert(data.error);
         }
     });
+}
+function removeFile(target){
+    let imgSrc = target[0].currentSrc;
+    let data = new FormData();
+    data.append("imgSrc", imgSrc);
+    $.ajax({
+        data: data,
+        type: "POST",
+        url: "/delPathFile",
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            console.log(data.message);
+        },
+        error:function(data){
+            alert(data.error);
+        }
+    })
 }

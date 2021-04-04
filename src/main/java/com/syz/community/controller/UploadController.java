@@ -1,10 +1,8 @@
 package com.syz.community.controller;
 
-import com.syz.community.dto.ResultDTO;
 import com.syz.community.exception.CustomizeErrorCode;
-import org.springframework.beans.factory.annotation.Value;
+import com.syz.community.exception.CustomizeException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,49 +10,95 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
 public class UploadController {
-
-    @Value("${SUMMERNOTE_FILE_UPLOAD}")
-    private String SUMMERNOTE_FILE_UPLOAD;
-
-    @RequestMapping(value="/upload/img",method={RequestMethod.POST})
+    @RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
     @ResponseBody
-    public Object uploadSummerNoteImgs(@RequestParam("file") MultipartFile file, Model model) {
-        //文件保存路径，自定义路径
-        String savePath=SUMMERNOTE_FILE_UPLOAD;
-        //保存文件，返回文件访问地址
-        return savePngFile(file, savePath);
+    public Map<String, Object> imgResolver(@RequestParam("file") MultipartFile file) {
+        String fileStr = file.getOriginalFilename();
+        String newFileStr = UUID.randomUUID().toString() + fileStr.substring(fileStr.lastIndexOf("."));
+        File descImg = makefile("D:\\workspace\\idea\\community\\src\\main\\resources\\static\\images\\" + newFileStr);
+        Map<String, Object> map = new HashMap<>();
+        try {
+            file.transferTo(descImg);
+        } catch (IOException e) {
+            map.put("error", CustomizeErrorCode.IMAGE_UPLOAD_FAIL.getMessage());
+        }
+        map.put("fileName", newFileStr);//存储文件名
+        return map;
     }
-    public static Object savePngFile(MultipartFile file, String path) {
-        //判断文件是否为空
-        if (!file.isEmpty()) {
-            try {
-                //创建每天生成的目录
-                String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-                path=path+date+"/";
-                File filepath = new File(path);
-                if (!filepath.exists()){
-                    filepath.mkdirs();
+
+    private File makefile(String path) {
+        if (path == null || "".equals(path.trim()))
+            return null;
+        String dirPath = path.substring(0, path.lastIndexOf("\\"));
+        File dir = new File(dirPath);
+        if (!dir.exists()) { //先建目录
+            dir.mkdirs();
+            dir = null;
+        }
+        //直接建目录
+        int index = path.lastIndexOf(".");
+        if (index > 0) { // 全路径，保存文件后缀
+            File file = new File(path);
+            if (!file.exists()) {//再建文件
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    throw new CustomizeException(CustomizeErrorCode.IMAGE_UPLOAD_FAIL);
                 }
-                //文件保存路径
-                //String filename = file.getOriginalFilename();
-                //重新生成文件名
-                String filename= UUID.randomUUID().toString().replace("-", "")+".png";
-                String savePath = path + filename;
-                //转存文件
-                File uploadFile = new File(savePath);
-                file.transferTo(uploadFile);
-                return date+"/"+filename;
-            } catch (Exception e) {
-                return ResultDTO.errorOf(CustomizeErrorCode.IMAGE_UPLOAD_FAIL.getCode(), CustomizeErrorCode.IMAGE_UPLOAD_FAIL.getMessage());
+            }
+            return file;
+        } else {
+            return dir;
+        }
+    }
+
+    @RequestMapping(value = "/delPathFile", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> DelFiles(@RequestParam(value = "imgSrc", required = false) String fileName) {
+        String imageName = fileName.substring(fileName.lastIndexOf("/"));
+        File f = new File("D:\\workspace\\idea\\community\\src\\main\\resources\\static\\images\\" + imageName);
+        Map<String, Object> map = new HashMap<>();
+        try {
+            DeleteFolder(f.getCanonicalPath());
+        } catch (IOException e) {
+            map.put("error", CustomizeErrorCode.IMAGE_DELETE_FAIL.getMessage());
+        }
+        map.put("message", imageName);//被删除的文件名
+        return map;
+    }
+
+    private @ResponseBody
+    static boolean DeleteFolder(String canonicalPath) {
+        boolean flag = false;
+        File file = new File(canonicalPath);
+        // 判断目录或文件是否存在
+        if (file.exists()) {
+            if (file.isFile()) {
+                return deleteFile(canonicalPath);
+            } else {
+                return flag;
             }
         }
-        return null;
+        return flag;
+    }
+
+    public @ResponseBody
+    static boolean deleteFile(String canonicalPath) {
+        boolean flag = false;
+        File file = new File(canonicalPath);
+        // 路径为文件且不为空则进行删除
+        if (file.isFile() && file.exists()) {
+            file.delete();
+            flag = true;
+        }
+        return flag;
     }
 }
 
