@@ -6,6 +6,7 @@ create table comment
     content       VARCHAR(1024),
     commentator   INT NOT NULL,
     like_count    INT DEFAULT 0,
+    comment_count INT DEFAULT 0,
     gmt_create    BIGINT,
     gmt_modified  BIGINT,
     constraint comment_pk

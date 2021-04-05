@@ -28,7 +28,6 @@
                     <h4 class="media-heading">
                         <a th:href="@{/question/{id}(id=${question.id})}" th:text="${question.title}" style="color: #0f0f0f"></a>
                     </h4>
-                    <span th:text="${question.description}"></span><br>
                     <span class="text-desc">[[${question.commentCount}]]件返事• [[${question.viewCount}]] 回ブラウズ • [[${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}]]</span>
                 </div>
             </div>

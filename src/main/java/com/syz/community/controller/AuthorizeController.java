@@ -1,11 +1,11 @@
 package com.syz.community.controller;
 
 import com.syz.community.dto.AccessTokenDTO;
-import com.syz.community.model.User;
+import com.syz.community.model.GithubProperties;
 import com.syz.community.model.GithubUser;
+import com.syz.community.model.User;
 import com.syz.community.provider.GithubProvider;
 import com.syz.community.service.UserService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,22 +27,17 @@ public class AuthorizeController {
     private GithubProvider githubProvider;
     @Resource
     private UserService userService;
-
-    @Value("${github.client.id}")
-    private String clientId;
-    @Value("${github.client.secret}")
-    private String clientSecret;
-    @Value("${github.redirect.uri}")
-    private String redirectUri;
+    @Resource
+    private GithubProperties githubProperties;
 
     @RequestMapping("/callback")
     public String callBack(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
                            HttpServletResponse response) {
         AccessTokenDTO accessTokenDto = new AccessTokenDTO();
-        accessTokenDto.setClient_id(clientId);
-        accessTokenDto.setClient_secret(clientSecret);
-        accessTokenDto.setRedirect_uri(redirectUri);
+        accessTokenDto.setClient_id(githubProperties.getClient_id());
+        accessTokenDto.setClient_secret(githubProperties.getClient_secret());
+        accessTokenDto.setRedirect_uri(githubProperties.getRedirect_uri());
         accessTokenDto.setCode(code);
         accessTokenDto.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDto);

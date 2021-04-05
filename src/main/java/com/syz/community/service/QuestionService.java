@@ -40,11 +40,13 @@ public class QuestionService {
     @Resource
     private PaginationService paginationService;
 
-    public PaginationDTO getQuestionList(int pageNo, int pageSize) {
+    public PaginationDTO getQuestionList(String search, int pageNo, int pageSize) {
+        String searchReplace = "";
+        if (StringUtils.isNotBlank(search)) {
+            searchReplace = StringUtils.replace(search, " ", "|");
+        }
         PageHelper.startPage(pageNo, pageSize);
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create DESC");
-        List<Question> questions = questionMapper.selectByExample(questionExample);
+        List<Question> questions = questionExtMapper.selectBySearch(searchReplace);
         PageInfo<Question> pageInfo = new PageInfo<>(questions);
         PaginationDTO paginationDTO = getPaginationDTO(pageInfo, pageNo);
         return paginationDTO;
