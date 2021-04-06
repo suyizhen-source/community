@@ -28,6 +28,7 @@ public class IndexController {
                         @RequestParam(value="search",required = false)String search) {
         PaginationDTO questionList=questionService.getQuestionList(search,pageNo,pageSize);
         model.addAttribute("questionList",questionList);
+        model.addAttribute("search",search);
         return "index";
     }
 }
