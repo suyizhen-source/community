@@ -1,5 +1,6 @@
 package com.syz.community.controller;
 
+import com.syz.community.cache.HotTagCache;
 import com.syz.community.dto.PaginationDTO;
 import com.syz.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * ホームページ画面コントロール
@@ -21,14 +23,21 @@ public class IndexController {
     @Resource
     private QuestionService questionService;
 
+    @Resource
+    private HotTagCache hotTagCache;
+
     @RequestMapping("/")
     public String index(HttpServletRequest request, Model model,
                         @RequestParam(value="pageNo",defaultValue="1")int pageNo,
                         @RequestParam(value="pageSize",defaultValue="5")int pageSize,
-                        @RequestParam(value="search",required = false)String search) {
-        PaginationDTO questionList=questionService.getQuestionList(search,pageNo,pageSize);
+                        @RequestParam(value="search",required = false,defaultValue = "")String search,
+                        @RequestParam(value="tag",required = false,defaultValue = "")String tag) {
+        PaginationDTO questionList=questionService.getQuestionList(search,tag,pageNo,pageSize);
+        List<String> tags = hotTagCache.getHots();
         model.addAttribute("questionList",questionList);
         model.addAttribute("search",search);
+        model.addAttribute("tags",tags);
+        model.addAttribute("tag",tag);
         return "index";
     }
 }

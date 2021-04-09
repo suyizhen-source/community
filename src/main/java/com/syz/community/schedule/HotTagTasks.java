@@ -28,7 +28,7 @@ public class HotTagTasks {
     @Resource
     private HotTagCache hotTagCache;
 
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(fixedRate = 1000*60*60*3)
     public void hotTagSchedule(){
         int offset=0;
         int limit=20;
@@ -51,12 +51,6 @@ public class HotTagTasks {
             }
             offset+=limit;
         }
-        priorities.forEach((k,v)->{
-            System.out.print(k);
-            System.out.print(":");
-            System.out.print(v);
-            System.out.println();
-        });
         hotTagCache.updateTags(priorities);
     }
 }

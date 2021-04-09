@@ -8,6 +8,6 @@ public interface QuestionExtMapper {
     int addViewCount(Question question);
     int addCommentCount(Question question);
     List<Question> selectRelated(Question question);
-    List<Question> selectBySearch(String search);
+    List<Question> selectBySearch(String search, String tag);
 
 }
