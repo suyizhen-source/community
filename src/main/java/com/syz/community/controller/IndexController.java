@@ -29,7 +29,7 @@ public class IndexController {
     @RequestMapping("/")
     public String index(HttpServletRequest request, Model model,
                         @RequestParam(value="pageNo",defaultValue="1")int pageNo,
-                        @RequestParam(value="pageSize",defaultValue="5")int pageSize,
+                        @RequestParam(value="pageSize",defaultValue="10")int pageSize,
                         @RequestParam(value="search",required = false,defaultValue = "")String search,
                         @RequestParam(value="tag",required = false,defaultValue = "")String tag) {
         PaginationDTO questionList=questionService.getQuestionList(search,tag,pageNo,pageSize);

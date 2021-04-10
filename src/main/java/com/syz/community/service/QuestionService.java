@@ -42,11 +42,15 @@ public class QuestionService {
 
     public PaginationDTO getQuestionList(String search, String tag, int pageNo, int pageSize) {
         String searchReplace = "";
+        String tagReplace = "";
         if (StringUtils.isNotBlank(search)) {
-            searchReplace = StringUtils.replace(search, " ", "|");
+            searchReplace = StringUtils.replace(search, " ", "|").replace("+","").replace("*","").replace("?", "");
+        }
+        if (StringUtils.isNotBlank(tag)) {
+            tagReplace = StringUtils.replace(tag, "+", "").replace("*","").replace("?", "");
         }
         PageHelper.startPage(pageNo, pageSize);
-        List<Question> questions = questionExtMapper.selectBySearch(searchReplace,tag);
+        List<Question> questions = questionExtMapper.selectBySearch(searchReplace,tagReplace);
         PageInfo<Question> pageInfo = new PageInfo<>(questions);
         PaginationDTO paginationDTO = getPaginationDTO(pageInfo, pageNo);
         return paginationDTO;
@@ -103,6 +107,13 @@ public class QuestionService {
             question.setGmtModified(question.getGmtCreate());
             questionMapper.insertSelective(question);
         } else {
+            Question dbQuestion = questionMapper.selectByPrimaryKey(question.getId());
+            if (dbQuestion==null){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+            if (dbQuestion.getCreator()!=question.getCreator()){
+                throw new CustomizeException(CustomizeErrorCode.INVALID_OPERATION);
+            }
             question.setGmtModified(System.currentTimeMillis());
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria().andIdEqualTo(question.getId());
@@ -124,7 +135,7 @@ public class QuestionService {
         if (StringUtils.isBlank(queryDto.getTag())) {
             return new ArrayList<>();
         }
-        String replace = StringUtils.replace(queryDto.getTag(), ",", "|");
+        String replace = StringUtils.replace(queryDto.getTag(), ",", "|").replace("+","").replace("*","").replace("?", "");
         Question question = new Question();
         question.setId(queryDto.getId());
         question.setTag(replace);

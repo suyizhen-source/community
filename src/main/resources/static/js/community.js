@@ -21,7 +21,7 @@ function commit(targetID, content, type) {
                 if (response.code == 2000) {
                     let isAccepted = confirm(response.message);
                     if (isAccepted) {
-                        window.open("https://github.com/login/oauth/authorize?client_id=115285b7216b4c2397a1&redirect_uri=http://localhost:8080/callback&scope=user&state=1");
+                        window.open("https://github.com/login/oauth/authorize?client_id=115285b7216b4c2397a1&redirect_uri=" + document.location.origin + "/callback&scope=user&state=1");
                         window.localStorage.setItem("closable", "true");
                     }
                 } else {

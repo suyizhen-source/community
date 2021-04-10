@@ -1,6 +1,7 @@
 package com.syz.community.interceptor;
 
 import com.syz.community.mapper.UserMapper;
+import com.syz.community.model.GithubProperties;
 import com.syz.community.model.User;
 import com.syz.community.model.UserExample;
 import com.syz.community.service.NotificationService;
@@ -23,8 +24,12 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Resource
     private NotificationService notificationService;
 
+    @Resource
+    private GithubProperties githubProperties;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        request.getServletContext().setAttribute("redirectUri", githubProperties.getRedirect_uri());
         Cookie[] cookies = request.getCookies();
         if (cookies!=null&&cookies.length!=0) {
             for (Cookie cookie : cookies) {
