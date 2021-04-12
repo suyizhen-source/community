@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.syz.community.dto.PaginationDTO;
 import com.syz.community.dto.QuestionDTO;
+import com.syz.community.dto.QuestionQueryDTO;
+import com.syz.community.enums.SortEnum;
 import com.syz.community.exception.CustomizeErrorCode;
 import com.syz.community.exception.CustomizeException;
 import com.syz.community.mapper.QuestionExtMapper;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -40,17 +43,32 @@ public class QuestionService {
     @Resource
     private PaginationService paginationService;
 
-    public PaginationDTO getQuestionList(String search, String tag, int pageNo, int pageSize) {
+    public PaginationDTO getQuestionList(String search, String tag, String sort, int pageNo, int pageSize) {
         String searchReplace = "";
         String tagReplace = "";
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
         if (StringUtils.isNotBlank(search)) {
             searchReplace = StringUtils.replace(search, " ", "|").replace("+","").replace("*","").replace("?", "");
+            questionQueryDTO.setSearch(searchReplace);
         }
         if (StringUtils.isNotBlank(tag)) {
             tagReplace = StringUtils.replace(tag, "+", "").replace("*","").replace("?", "");
+            questionQueryDTO.setTag(tag);
+        }
+        for (SortEnum sortEnum:SortEnum.values()) {
+            if (sortEnum.name().toLowerCase(Locale.ROOT).equals(sort)){
+                questionQueryDTO.setSort(sort);
+                if (sortEnum == SortEnum.HOT7) {
+                    questionQueryDTO.setTime(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 7);
+                }
+                if (sortEnum == SortEnum.HOT30) {
+                    questionQueryDTO.setTime(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30);
+                }
+                break;
+            }
         }
         PageHelper.startPage(pageNo, pageSize);
-        List<Question> questions = questionExtMapper.selectBySearch(searchReplace,tagReplace);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         PageInfo<Question> pageInfo = new PageInfo<>(questions);
         PaginationDTO paginationDTO = getPaginationDTO(pageInfo, pageNo);
         return paginationDTO;

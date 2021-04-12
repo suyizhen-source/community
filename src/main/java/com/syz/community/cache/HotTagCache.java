@@ -9,7 +9,7 @@ import java.util.*;
 @Component
 @Data
 public class HotTagCache {
-    private List<String> hots = new ArrayList<>();
+    private List<String> tags = new ArrayList<>();
 
     public void updateTags(Map<String, Integer> tags){
         int max =5;
@@ -34,6 +34,6 @@ public class HotTagCache {
             sortedTags.add(0,poll.getName());
             poll=priorityQueue.poll();
         }
-        hots=sortedTags;
+        this.tags =sortedTags;
     }
 }
