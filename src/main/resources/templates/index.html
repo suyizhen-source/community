@@ -38,7 +38,7 @@
                     <h4 class="media-heading">
                         <a th:href="@{/question/{id}(id=${question.id})}" th:text="${question.title}" style="color: #0f0f0f"></a>
                     </h4>
-                    <span class="text-desc">[[${question.commentCount}]]件返事• [[${question.viewCount}]] 回ブラウズ • [[${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}]]</span>
+                    <span class="text-desc"><span class="glyphicon glyphicon-comment">[[${question.commentCount}]]</span> • <span class="glyphicon glyphicon-eye-open">[[${question.viewCount}]]</span> • [[${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}]]</span>
                 </div>
             </div>
             <nav aria-label="Page navigation">
