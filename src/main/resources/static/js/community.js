@@ -1,4 +1,3 @@
-// コメントする
 function commit(targetID, content, type) {
     if (!content) {
         alert("空欄のコメントをコミットすることができません。");
@@ -33,13 +32,14 @@ function commit(targetID, content, type) {
         dataType: "json"
     });
 }
-
+// 回答する
 function post() {
     let parentId = $("#question_id").val();
     let content = $("#comment_content").val();
     commit(parentId, content, 1);
 }
 
+// 回答をコメントする
 function comment(e) {
     let commentId = e.getAttribute("data-id");
     let content = $("#input-" + commentId).val();
@@ -147,4 +147,17 @@ function removeFile(target){
             alert(data.error);
         }
     })
+}
+function thumbComments(e){
+    let thumbId = e.getAttribute("id");
+    let url = e.getAttribute("data-id");
+    let commentId = e.getAttribute("thumbBtn-id");
+    let thumbBtn = $("#thumbBtn-" + commentId);
+    let tags = $("#thumb-" + thumbId).children("#thumbChildElement");
+    $.getJSON("/thumb/" + url ,function(data) {
+        //span标签赋值用html,表单一般用val
+        tags.html(data);
+        window.location.reload();
+    });
+
 }

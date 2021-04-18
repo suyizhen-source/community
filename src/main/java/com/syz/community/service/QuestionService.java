@@ -43,6 +43,9 @@ public class QuestionService {
     @Resource
     private PaginationService paginationService;
 
+    @Resource
+    private QuestionService questionService;
+
     public PaginationDTO getQuestionList(String search, String tag, String sort, int pageNo, int pageSize) {
         String searchReplace = "";
         String tagReplace = "";
@@ -86,6 +89,7 @@ public class QuestionService {
     }
 
     public QuestionDTO getQuestionById(Integer id) {
+        questionService.addViewCount(id);
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
@@ -99,10 +103,9 @@ public class QuestionService {
         QuestionDTO questionDto = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDto);
         questionDto.setUser(user);
+        questionDto.setViewCount(question.getViewCount());
         return questionDto;
     }
-
-    ;
 
     public PaginationDTO getPaginationDTO(PageInfo<Question> pageInfo, int pageNo) {
         List<QuestionDTO> questionDTOList = new ArrayList<>();
@@ -116,8 +119,6 @@ public class QuestionService {
         PaginationDTO paginationDTO = paginationService.setPaginationDTO(pageInfo, questionDTOList, pageNo);
         return paginationDTO;
     }
-
-    ;
 
     public void createOrUpdate(Question question) {
         if (question.getId() == null) {

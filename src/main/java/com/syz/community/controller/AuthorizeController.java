@@ -56,12 +56,11 @@ public class AuthorizeController {
             Cookie cookie = new Cookie("token", token);
             cookie.setMaxAge(60 * 60 * 24 * 30 * 6);
             response.addCookie(cookie);
-            return "redirect:/";
         } else {
             //エラーが発生した場合
             log.error("callback get github error,{}", githubUser);
-            return "redirect:/";
         }
+        return "redirect:/";
     }
 
     @GetMapping("/logout")
@@ -72,6 +71,4 @@ public class AuthorizeController {
         response.addCookie(cookie);
         return "redirect:/";
     }
-
-    ;
 }
