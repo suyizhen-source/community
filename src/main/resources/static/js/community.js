@@ -149,15 +149,11 @@ function removeFile(target){
     })
 }
 function thumbComments(e){
-    let thumbId = e.getAttribute("id");
     let url = e.getAttribute("data-id");
-    let commentId = e.getAttribute("thumbBtn-id");
-    let thumbBtn = $("#thumbBtn-" + commentId);
-    let tags = $("#thumb-" + thumbId).children("#thumbChildElement");
+    let id = e.getAttribute("Btn-id");
+    let thumbBtn=$("#thumb-" + id);
     $.getJSON("/thumb/" + url ,function(data) {
-        //span标签赋值用html,表单一般用val
-        tags.html(data);
         window.location.reload();
     });
-
+    thumbBtn.toggleClass("active");
 }

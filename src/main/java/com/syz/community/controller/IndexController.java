@@ -31,7 +31,7 @@ public class IndexController {
                         @RequestParam(value="pageSize",defaultValue="10")int pageSize,
                         @RequestParam(value="search",required = false,defaultValue = "")String search,
                         @RequestParam(value="tag",required = false,defaultValue = "")String tag,
-                        @RequestParam(value="sort",required = false)String sort) {
+                        @RequestParam(value="sort",defaultValue = "new",required = false)String sort) {
         PaginationDTO questionList=questionService.getQuestionList(search,tag,sort,pageNo,pageSize);
         List<String> tags = hotTagCache.getTags();
         model.addAttribute("questionList",questionList);

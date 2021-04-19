@@ -24,17 +24,17 @@ public class ThumbController {
     @RequestMapping(value = "/thumb/{thumbParentId}/{thumbId}", method = RequestMethod.GET)
     @ResponseBody
     public String thumb(@PathVariable(name = "thumbParentId") Integer thumbParentId,
-                        @PathVariable(name = "thumbId") Integer thumbId){
+                        @PathVariable(name = "thumbId") Integer thumbId) {
         ThumbExample countExample = new ThumbExample();
         countExample.createCriteria().andThumbIdParentEqualTo(thumbParentId).andThumbIdEqualTo(thumbId);
         long totalCount = thumbMapper.countByExample(countExample);
         //判断同一个用户对同一个评论是否点赞超过一次
-        if (totalCount>=1){
+        if (totalCount >= 1) {
             ThumbExample thumbExample = new ThumbExample();
             thumbExample.createCriteria()
                     .andThumbIdParentEqualTo(thumbParentId);
             long count = thumbMapper.countByExample(thumbExample);
-            return ""+count;
+            return "" + count;
         }
         Thumb thumb = new Thumb();
         thumb.setThumbId(thumbId);
@@ -47,6 +47,6 @@ public class ThumbController {
         Comment comment = commentMapper.selectByPrimaryKey(thumbParentId);
         comment.setLikeCount((int) count);
         commentMapper.updateByPrimaryKey(comment);
-        return ""+count;
+        return "" + count;
     }
 }
