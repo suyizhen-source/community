@@ -32,6 +32,7 @@ function commit(targetID, content, type) {
         dataType: "json"
     });
 }
+
 // 回答する
 function post() {
     let parentId = $("#question_id").val();
@@ -91,11 +92,13 @@ function collapseComments(e) {
     comment.toggleClass("in");
     btn.toggleClass("active");
 }
-function showSelectTag(){
+
+function showSelectTag() {
     $("#select-tag").show();
     $("#error").hide();
 }
-function hideSelectTag(){
+
+function hideSelectTag() {
     $("#select-tag").hide();
 }
 
@@ -115,21 +118,22 @@ function sendFile(files) {
     let data = new FormData();//存放上传的文件数据
     data.append("file", files);
     $.ajax({
-        type : "POST",
-        url : "/uploadImg",
-        data : data,
-        cache : false,
-        contentType : false,
-        processData : false,
-        success: function(data) {
-            $('#summernote').summernote('insertImage','http://localhost:8080/images/'+data.fileName);
+        type: "POST",
+        url: "/uploadImg",
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            $('#summernote').summernote('insertImage', 'http://localhost:8080/images/' + data.fileName);
         },
-        error:function(data){
+        error: function (data) {
             alert(data.error);
         }
     });
 }
-function removeFile(target){
+
+function removeFile(target) {
     let imgSrc = target[0].currentSrc;
     let data = new FormData();
     data.append("imgSrc", imgSrc);
@@ -143,17 +147,25 @@ function removeFile(target){
         success: function (data) {
             console.log(data.message);
         },
-        error:function(data){
+        error: function (data) {
             alert(data.error);
         }
     })
 }
-function thumbComments(e){
+
+function thumbComments(e) {
+    debugger
     let url = e.getAttribute("data-id");
     let id = e.getAttribute("Btn-id");
-    let thumbBtn=$("#thumb-" + id);
-    $.getJSON("/thumb/" + url ,function(data) {
-        window.location.reload();
+    let thumbBtn = $("#thumb-" + id);
+    let tags = thumbBtn.children("#thumbChildElement");
+    $.getJSON("/thumb/" + url, function (data) {
+        if (data[0]) {
+            thumbBtn.addClass("active");
+            tags.html(data[1]);
+        } else {
+            thumbBtn.removeClass("active");
+            tags.html(data[1]);
+        }
     });
-    thumbBtn.toggleClass("active");
 }

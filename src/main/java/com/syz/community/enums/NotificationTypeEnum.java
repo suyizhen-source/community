@@ -2,7 +2,8 @@ package com.syz.community.enums;
 
 public enum NotificationTypeEnum {
     REPLY_QUESTION(1, "の質問を回答しました。"),
-    REPLY_COMMENT(2, "のコメントについて回答しました。");
+    REPLY_COMMENT(2, "のコメントについて回答しました。"),
+    THUMB_COMMENT(3, "のコメントについていいねを押しました。");
     private int type;
     private String name;
 

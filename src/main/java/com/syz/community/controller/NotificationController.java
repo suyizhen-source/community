@@ -18,15 +18,16 @@ public class NotificationController {
     NotificationService notificationService;
 
     @RequestMapping("/notification/{id}")
-    public String edit(@PathVariable(name = "id") Integer id, HttpServletRequest request){
+    public String edit(@PathVariable(name = "id") Integer id, HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             return "redirect:/";
         }
-        NotificationDTO notificationDTO = notificationService.readNotification(id,user);
-        if (NotificationTypeEnum.REPLY_COMMENT.getType()==notificationDTO.getType()||
-            NotificationTypeEnum.REPLY_QUESTION.getType()==notificationDTO.getType()){
-            return "redirect:/question/"+notificationDTO.getOuterId();
+        NotificationDTO notificationDTO = notificationService.readNotification(id, user);
+        if (NotificationTypeEnum.REPLY_COMMENT.getType() == notificationDTO.getType() ||
+                NotificationTypeEnum.REPLY_QUESTION.getType() == notificationDTO.getType() ||
+                NotificationTypeEnum.THUMB_COMMENT.getType() == notificationDTO.getType()) {
+            return "redirect:/question/" + notificationDTO.getOuterId();
         }
         return "/profile";
     }

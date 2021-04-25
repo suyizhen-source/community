@@ -60,9 +60,11 @@
                             </h6>
                             <div th:text="${comment.content}"></div>
                             <div class="menu">
-                                <span th:id="${'thumb-'+comment.id}" th:data-id="${comment.id+'/'+session.user.id}" th:Btn-id="${comment.id}"
-                                      onclick="thumbComments(this)" class="glyphicon glyphicon-thumbs-up icon ">
-                                      [[${comment.likeCount}]]
+                                <span class="glyphicon glyphicon-thumbs-up icon " th:id="${'thumb-'+comment.id}"
+                                      th:data-id="${comment.id+'/'+session.user.id+'/'+question.id}"
+                                      th:Btn-id="${comment.id}"
+                                      onclick="thumbComments(this)">
+                                      <span id="thumbChildElement" th:text="${comment.likeCount}"></span>
                                 </span>
 
                                 <span class="glyphicon glyphicon-comment icon" th:id="${'commentBtn-'+comment.id}"

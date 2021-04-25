@@ -13,6 +13,7 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     IMAGE_UPLOAD_FAIL(2009, "申し訳ございませんが、この写真をアップロードすることができません。"),
     IMAGE_DELETE_FAIL(2010, "申し訳ございませんが、この写真を削除することができません。"),
     INVALID_OPERATION(2011, "申し訳ございませんが、この問題を編集することができません。"),
+    THUMB_DELETE_FAIL(2011, "申し訳ございませんが、このいいねを取消することができません。"),
     ;
 
     private Integer code;
