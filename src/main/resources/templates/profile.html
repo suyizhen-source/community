@@ -24,11 +24,17 @@
                         <h4 class="media-heading">
                             <a th:href="@{/question/{id}(id=${question.id})}" th:text="${question.title}"></a>
                         </h4>
-                        <span class="text-desc">[[${question.commentCount}]]件返事• [[${question.viewCount}]] 回ブラウズ • [[${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}]] • </span>
+                        <span class="text-desc"><span
+                                class="glyphicon glyphicon-comment">[[${question.commentCount}]]</span> • <span
+                                class="glyphicon glyphicon-eye-open">[[${question.viewCount}]]</span> • [[${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}]] • </span>
                         <a th:href="@{/publish/{id}(id=${question.id})} " class="community-menu"
                            th:if="${session.user!=null && session.user.id==question.creator}">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true">編集</span>
                         </a>
+                        <button type="button" class="btn btn-danger btn-delete "
+                                onclick="deleteQuestion(this)"
+                                th:data-id="${question.id}">delete
+                        </button>
                     </div>
                 </div>
             </div>
@@ -60,8 +66,10 @@
                             </a>
                         </li>
 
-                        <li th:each="pageNo : ${pagination.pages}" th:class="${pagination.pageNo == pageNo}? 'active' : ''">
-                            <a th:href="@{/profile/{section}/(section=${section},pageNo=${pageNo})}" th:text="${pageNo}"></a>
+                        <li th:each="pageNo : ${pagination.pages}"
+                            th:class="${pagination.pageNo == pageNo}? 'active' : ''">
+                            <a th:href="@{/profile/{section}/(section=${section},pageNo=${pageNo})}"
+                               th:text="${pageNo}"></a>
                         </li>
 
                         <li th:if="${pagination.showNext}">
@@ -82,9 +90,10 @@
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 ">
             <div class="list-group section">
-                <a href="/profile/questions" th:class="${section}=='questions'?'list-group-item active':'list-group-item'">私の質問</a>
+                <a href="/profile/questions"
+                   th:class="${section}=='questions'?'list-group-item active':'list-group-item'">私の質問</a>
                 <a href="/profile/replies" th:class="${section}=='replies'?'list-group-item active':'list-group-item'">最新回答
-                <span class="badge" th:text="${session.unReadMessage}"></span>
+                    <span class="badge" th:text="${session.unReadMessage}"></span>
                 </a>
             </div>
         </div>

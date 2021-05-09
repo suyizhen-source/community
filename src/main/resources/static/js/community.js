@@ -154,7 +154,6 @@ function removeFile(target) {
 }
 
 function thumbComments(e) {
-    debugger
     let url = e.getAttribute("data-id");
     let id = e.getAttribute("Btn-id");
     let thumbBtn = $("#thumb-" + id);
@@ -168,4 +167,11 @@ function thumbComments(e) {
             tags.html(data[1]);
         }
     });
+}
+function deleteQuestion(e) {
+    let questionId = e.getAttribute("data-id");
+    let isDeleted = confirm("削除してもよろしいでしょうか？");
+    if (isDeleted) {
+        window.location.replace("/profile/questions/delete/"+questionId);
+    }
 }
