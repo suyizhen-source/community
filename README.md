@@ -1,17 +1,65 @@
 ## プロジェクト
-オープンソース、質問提出，回答、メッセージ通知など簡単なフォーラムプロジェクト。
-## 使っている技术
-|  技术   |  リンク   |
-| --- | --- |
-|  Spring Boot   |  http://projects.spring.io/spring-boot/#quick-start   |
-|   MyBatis  |  https://mybatis.org/mybatis-3/zh/index.html   |
-|   MyBatis Generator  |  http://mybatis.org/generator/   |
-|   H2  |   http://www.h2database.com/html/main.html  |
-|   Flyway  |   https://flywaydb.org/documentation/getstarted/firststeps/maven  |
-|Lombok| https://www.projectlombok.org |
-|Bootstrap|https://v3.bootcss.com/getting-started/|
-|Github OAuth|https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/|
-|UFile|https://github.com/ucloud/ufile-sdk-java|
-|Bootstrap|https://v3.bootcss.com/getting-started/|
+フォーラムサイト
+## スキル
+-   Spring Boot：Javaフレームワーク
+-   MyBatis・MyBatis Generator：DBフレームワーク
+-   Flyway：データベース管理
+-   フロントエンド：Javascript、Html、Css、Bootstrap
+-   Github OAuth:ログイン
+## 実装機能
+-   ホームページ画面
+    -   ログイン・ログアウト
+    -   話題一覧(最新、7日間最人気、30日間最人気の分類あり)
+    -   検索
+    -   質問提出
+    -   メッセージ確認
+    -   人気ランキング
+-   マイページ
+    -   私の質問
+    -   最新回答
+-   質問ページ
+    -   回答機能
+    -   質問内容編集機能(提出者のみ編集可能)
+    -   「いいね」機能
+    -   コメント機能
+    -   おすすめ機能
 
-http://syz.source.community
+## Project setup
+1．JDK，Maven　のインストール
+2．ソースをコピー
+```sh
+git clone https://github.com/suyizhen-source/community.git
+```
+3.データベースの作成
+```sh
+mvn flyway:migrate
+```
+4.ソースのベール命令を実行
+```sh
+mvn package
+```
+5.プログラム実行
+```sh
+java -jar target/community-0.0.1-SNAPSHOT.jar
+```
+6. 画面を開く
+```
+http://localhost:8887
+```
+
+##スクリプト
+```sql
+CREATE TABLE USER
+(
+    ID int AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    ACCOUNT_ID VARCHAR(100),
+    NAME VARCHAR(50),
+    TOKEN VARCHAR(36),
+    GMT_CREATE BIGINT,
+    GMT_MODIFIED BIGINT
+);
+```
+```bash
+mvn flyway:migrate
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+```

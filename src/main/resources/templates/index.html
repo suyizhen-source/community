@@ -17,14 +17,11 @@
                 <li role="presentation" th:class="${sort == 'new' || sort == '' ? 'active':''}">
                     <a th:href="@{/(sort='new')}">最新</a>
                 </li>
-                <li role="presentation" th:class="${sort == 'hot30' ? 'active':''}">
-                    <a th:href="@{/(sort='hot30')}">30天間最ホット</a>
-                </li>
                 <li role="presentation" th:class="${sort == 'hot7' ? 'active':''}">
-                    <a th:href="@{/(sort='hot7')}">7天間最ホット</a>
+                    <a th:href="@{/(sort='hot7')}">7日間最人気</a>
                 </li>
-                <li role="presentation" th:class="${sort == 'hot' ? 'active':''}">
-                    <a th:href="@{/(sort='hot')}">最ホット</a>
+                <li role="presentation" th:class="${sort == 'hot30' ? 'active':''}">
+                    <a th:href="@{/(sort='hot30')}">30日間最人気</a>
                 </li>
             </ul>
 
